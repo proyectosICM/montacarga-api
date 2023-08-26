@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.time.LocalTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -37,6 +39,16 @@ public class CarrilesModel {
 
     @Nullable
     private Boolean finAuxiliar;
+
     @Nullable
     private Boolean salida;
+
+    @Nullable
+    private LocalTime horaInicio;
+
+    @Nullable
+    private LocalTime  horaFin;
+
+    @Nullable
+    private Integer tiempoTotal;
 }
