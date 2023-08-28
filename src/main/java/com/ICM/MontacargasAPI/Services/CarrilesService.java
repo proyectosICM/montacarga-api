@@ -21,4 +21,37 @@ public class CarrilesService {
         return carrilesRepository.findById(id);
     }
 
+    public CarrilesModel AsingMont(Long id, CarrilesModel carrilesModel){
+        Optional<CarrilesModel> existing = carrilesRepository.findById(id);
+        if(existing.isPresent()){
+            CarrilesModel carril = existing.get();
+            carril.setCantidadMontacargas(carrilesModel.getCantidadMontacargas());
+            carril.setEstadosModel(carrilesModel.getEstadosModel());
+            carril.setHoraInicio(carrilesModel.getHoraInicio());
+            return carrilesRepository.save(carril);
+        }
+        return null;
+    }
+
+    public CarrilesModel FinAuxiliar(Long id, CarrilesModel carrilesModel){
+        Optional<CarrilesModel> existing = carrilesRepository.findById(id);
+        if (existing.isPresent()){
+            CarrilesModel carril = existing.get();
+            carril.setFinAuxiliar(carrilesModel.getFinAuxiliar());
+            carril.setHoraFin(carrilesModel.getHoraFin());
+            return carrilesRepository.save(carril);
+        }
+        return null;
+    }
+
+    public CarrilesModel SalidaConductor(Long id, CarrilesModel carrilesModel){
+        Optional<CarrilesModel> existing = carrilesRepository.findById(id);
+        if (existing.isPresent()){
+            CarrilesModel carril = existing.get();
+            carril.setSalida(carrilesModel.getSalida());
+            return carrilesRepository.save(carril);
+        }
+        return null;
+    }
+
 }

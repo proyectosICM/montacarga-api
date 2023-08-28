@@ -35,7 +35,10 @@ public class CarrilesModel {
     private Integer cantidadMontacargas;
 
     @Nullable
-    private Boolean finMontacarga;
+    private Boolean finMontacarga1;
+
+    @Nullable
+    private Boolean finMontacarga2;
 
     @Nullable
     private Boolean finAuxiliar;
