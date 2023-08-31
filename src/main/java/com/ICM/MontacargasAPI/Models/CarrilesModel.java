@@ -54,4 +54,7 @@ public class CarrilesModel {
 
     @Nullable
     private Integer tiempoTotal;
+
+    @Nullable
+    private Boolean notificar;
 }
