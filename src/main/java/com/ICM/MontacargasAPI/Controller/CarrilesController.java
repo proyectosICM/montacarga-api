@@ -98,4 +98,22 @@ public class CarrilesController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    @PutMapping("/unirse/{id}/{placa}")
+    public ResponseEntity<CarrilesModel> Unirse(@PathVariable Long id, @PathVariable String placa){
+        CarrilesModel finMontacarga = carrilesService.UnirseMontacargas(id, placa);
+        if (finMontacarga!=null){
+            return new ResponseEntity<>(finMontacarga, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping("/desunirse/{id}/{placa}")
+    public ResponseEntity<CarrilesModel> DesUnirse(@PathVariable Long id, @PathVariable String placa){
+        CarrilesModel finMontacarga = carrilesService.DesUnirseMontacargas(id, placa);
+        if (finMontacarga!=null){
+            return new ResponseEntity<>(finMontacarga, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }

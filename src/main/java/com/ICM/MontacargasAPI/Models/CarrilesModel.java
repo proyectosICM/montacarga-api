@@ -32,13 +32,22 @@ public class CarrilesModel {
     private SedesModel sedesModel;
 */
     @Nullable
+    private Integer montacargasSolicitados;
+
+    @Nullable
     private Integer cantidadMontacargas;
 
     @Nullable
     private Boolean finMontacarga1;
 
     @Nullable
+    private String placa1;
+
+    @Nullable
     private Boolean finMontacarga2;
+
+    @Nullable
+    private String placa2;
 
     @Nullable
     private Boolean finAuxiliar;

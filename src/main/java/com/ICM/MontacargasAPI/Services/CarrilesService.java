@@ -91,13 +91,18 @@ public class CarrilesService {
             carril.setNotificar(false);
             if(nuevoEstadoId == 1){
                 carril.setSalida(false);
+                carril.setMontacargasSolicitados(null);
                 carril.setCantidadMontacargas(null);
+                carril.setPlaca1(null);
+                carril.setPlaca2(null);
                 carril.setFinMontacarga1(null);
                 carril.setFinMontacarga2(null);
                 carril.setFinAuxiliar(null);
                 carril.setHoraInicio(null);
                 carril.setHoraFin(null);
                 carril.setNotificar(null);
+
+
             }
 
             return carrilesRepository.save(carril);
@@ -122,4 +127,52 @@ public class CarrilesService {
         }
         return null;
     }
+
+    public CarrilesModel UnirseMontacargas(Long id, String placa) {
+        Optional<CarrilesModel> existing = carrilesRepository.findById(id);
+        return existing.map(carril -> {
+            if (carril.getEstadosModel().getId() == 2) {
+                int montacargasSolicitados = carril.getMontacargasSolicitados();
+                if (montacargasSolicitados == 1 && carril.getPlaca1() == null) {
+                    carril.setPlaca1(placa);
+                } else if (montacargasSolicitados == 2 && carril.getPlaca1() == null) {
+                    carril.setPlaca1(placa);
+                } else if (montacargasSolicitados == 2 && carril.getPlaca2() == null) {
+                    carril.setPlaca2(placa);
+                }
+                return carrilesRepository.save(carril);
+            }
+            return carril;
+        }).orElse(null);
+    }
+
+    public CarrilesModel DesUnirseMontacargas(Long id, String placa) {
+        Optional<CarrilesModel> existing = carrilesRepository.findById(id);
+        return existing.map(carril -> {
+            if (carril.getEstadosModel().getId() == 2) {
+                int montacargasSolicitados = carril.getMontacargasSolicitados();
+                if (montacargasSolicitados == 1 && carril.getPlaca1().equals(placa) && carril.getPlaca1() != null) {
+                    carril.setPlaca1(null);
+                } else if (montacargasSolicitados == 2 && carril.getPlaca1() != null || carril.getPlaca2() != null  ) {
+                        if (carril.getPlaca1().equals(placa)) {
+                            carril.setPlaca1(null);
+                        }else if (carril.getPlaca2().equals(placa)) {
+                        carril.setPlaca2(null);
+                    }
+                    } else if (montacargasSolicitados == 2 && carril.getPlaca1() == null || carril.getPlaca2() != null  ) {
+                    if (carril.getPlaca2().equals(placa)) {
+                        carril.setPlaca2(null);
+                    }
+                }else if (montacargasSolicitados == 2 && carril.getPlaca1() != null || carril.getPlaca2() != null  ) {
+                    if (carril.getPlaca2().equals(placa)) {
+                        carril.setPlaca2(null);
+                    }
+                }
+                return carrilesRepository.save(carril);
+            }
+            return carril;
+        }).orElse(null);
+    }
+
+
 }
