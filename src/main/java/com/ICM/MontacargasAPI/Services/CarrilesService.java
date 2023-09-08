@@ -50,7 +50,7 @@ public class CarrilesService {
             CarrilesModel carril = existing.get();
             carril.setCantidadMontacargas(carrilesModel.getCantidadMontacargas());
             carril.setEstadosModel(carrilesModel.getEstadosModel());
-            carril.setHoraInicio(carrilesModel.getHoraInicio());
+            carril.setHoraInicio(LocalTime.now());
             return carrilesRepository.save(carril);
         }
         return null;
@@ -111,6 +111,9 @@ public class CarrilesService {
                 // Estado 3 -> Estado 1: Restablecer valores
                 carril.setEstadosModel(nuevoEstado);
                 resetearValores(carril);
+            } else if (carril.getEstadosModel().getId() == 2 && nuevoEstadoId == 2) {
+                // Estado 2 -> Estado 1: Restablecer valores
+                carril.setEstadosModel(nuevoEstado);
             }
 
             return carrilesRepository.save(carril);
