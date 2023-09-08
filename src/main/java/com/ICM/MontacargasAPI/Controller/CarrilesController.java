@@ -59,6 +59,15 @@ public class CarrilesController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PutMapping("/notificarIng/{id}")
+    public ResponseEntity<CarrilesModel> NotificarIng(@PathVariable Long id){
+        CarrilesModel finAuxiliar = carrilesService.NotificarIng(id);
+        if (finAuxiliar!=null){
+            return new ResponseEntity<>(finAuxiliar, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     @PutMapping("/salidaConductor/{id}")
     public ResponseEntity<CarrilesModel> SalidaConductor(@PathVariable Long id, @RequestBody CarrilesModel carrilesModel){
         CarrilesModel salidaConductor = carrilesService.SalidaConductor(id, carrilesModel);
@@ -90,9 +99,9 @@ public class CarrilesController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/finMontacarga/{id}/{montacarga}")
-    public ResponseEntity<CarrilesModel> FinMontacarga(@PathVariable Long id, @PathVariable int montacarga){
-        CarrilesModel finMontacarga = carrilesService.FinMontacargas(id, montacarga);
+    @PutMapping("/finMontacarga/{id}/{montacarga}/{presente}")
+    public ResponseEntity<CarrilesModel> FinMontacarga(@PathVariable Long id, @PathVariable int montacarga, @PathVariable boolean presente){
+        CarrilesModel finMontacarga = carrilesService.FinMontacargas(id, montacarga, presente);
         if (finMontacarga!=null){
             return new ResponseEntity<>(finMontacarga, HttpStatus.OK);
         }

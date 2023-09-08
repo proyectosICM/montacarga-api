@@ -66,4 +66,7 @@ public class CarrilesModel {
 
     @Nullable
     private Boolean notificar;
+
+    @Nullable
+    private Boolean trabaruedas;
 }

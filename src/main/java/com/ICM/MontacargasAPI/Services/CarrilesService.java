@@ -6,6 +6,8 @@ import com.ICM.MontacargasAPI.Repositories.CarrilesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +38,7 @@ public class CarrilesService {
             carril.setHoraInicio(carril.getHoraInicio());
             carril.setHoraFin(carril.getHoraFin());
             carril.setNotificar(carrilesModel.getNotificar());
+            carril.setTrabaruedas(carrilesModel.getTrabaruedas());
             return carrilesRepository.save(carril);
         }
         return null;
@@ -59,7 +62,20 @@ public class CarrilesService {
             CarrilesModel carril = existing.get();
             carril.setFinAuxiliar(carrilesModel.getFinAuxiliar());
             carril.setHoraFin(carrilesModel.getHoraFin());
+            carril.setTrabaruedas(false);
             return carrilesRepository.save(carril);
+        }
+        return null;
+    }
+
+    public CarrilesModel NotificarIng(Long id){
+        Optional<CarrilesModel> existing = carrilesRepository.findById(id);
+        if (existing.isPresent()){
+            CarrilesModel carril = existing.get();
+            if (!carril.getNotificar() && carril.getEstadosModel().getId() == 2){
+                carril.setNotificar(true);
+                return carrilesRepository.save(carril);
+            }
         }
         return null;
     }
@@ -74,35 +90,27 @@ public class CarrilesService {
         return null;
     }
 
-
-
-
     // Servicios los sensores
     //Cambiar estado
     public CarrilesModel CambiarEstado(Long id, Long nuevoEstadoId) {
         Optional<CarrilesModel> existing = carrilesRepository.findById(id);
         if (existing.isPresent()) {
             CarrilesModel carril = existing.get();
-
             EstadosModel nuevoEstado = new EstadosModel();
             nuevoEstado.setId(nuevoEstadoId);
 
-            carril.setEstadosModel(nuevoEstado);
-            carril.setNotificar(false);
-            if(nuevoEstadoId == 1){
-                carril.setSalida(false);
-                carril.setMontacargasSolicitados(null);
-                carril.setCantidadMontacargas(null);
-                carril.setPlaca1(null);
-                carril.setPlaca2(null);
-                carril.setFinMontacarga1(null);
-                carril.setFinMontacarga2(null);
-                carril.setFinAuxiliar(null);
-                carril.setHoraInicio(null);
-                carril.setHoraFin(null);
-                carril.setNotificar(null);
-
-
+            if (carril.getEstadosModel().getId() == 1) {
+                carril.setEstadosModel(nuevoEstado);
+                carril.setMontacargasSolicitados(2);
+                carril.setNotificar(false);
+            } else if (carril.getEstadosModel().getId() == 2 && nuevoEstadoId == 1) {
+                // Estado 2 -> Estado 1: Restablecer valores
+                carril.setEstadosModel(nuevoEstado);
+                resetearValores(carril);
+            } else if (carril.getEstadosModel().getId() == 3 && carril.getFinAuxiliar() && carril.getSalida() && nuevoEstadoId == 1) {
+                // Estado 3 -> Estado 1: Restablecer valores
+                carril.setEstadosModel(nuevoEstado);
+                resetearValores(carril);
             }
 
             return carrilesRepository.save(carril);
@@ -110,20 +118,80 @@ public class CarrilesService {
         return null;
     }
 
-    //FIn montacargas
-    public CarrilesModel FinMontacargas(Long id, int montacarga){
-        Optional<CarrilesModel> existing = carrilesRepository.findById(id);
-        if (existing.isPresent()){
-            CarrilesModel carril = existing.get();
-            if(carril.getEstadosModel().getId() == 3){
-                if (montacarga == 1){
-                    carril.setFinMontacarga1(true);
-                } else if (montacarga == 2) {
-                    carril.setFinMontacarga2(true);
-                }
-            }
+    private void resetearValores(CarrilesModel carril) {
+        carril.setSalida(false);
+        carril.setMontacargasSolicitados(null);
+        carril.setCantidadMontacargas(null);
+        carril.setPlaca1(null);
+        carril.setPlaca2(null);
+        carril.setFinMontacarga1(null);
+        carril.setFinMontacarga2(null);
+        carril.setFinAuxiliar(null);
+        carril.setHoraInicio(null);
+        carril.setHoraFin(null);
+        carril.setNotificar(null);
+        carril.setTrabaruedas(null);
+    }
 
-            return carrilesRepository.save(carril);
+    // Fin montacargas
+    public CarrilesModel FinMontacargas(Long id, int montacarga, boolean presente) {
+        Optional<CarrilesModel> existing = carrilesRepository.findById(id);
+        if (existing.isPresent()) {
+            CarrilesModel carril = existing.get();
+            if (carril.getEstadosModel().getId() == 3) {
+                if (montacarga == 1) {
+                    if (presente) {
+                        if(carril.getCantidadMontacargas() == 1){
+                            carril.setFinMontacarga1(true);
+                            carril.setFinAuxiliar(true);
+                            carril.setHoraFin(LocalTime.now());
+                        } else if(carril.getCantidadMontacargas() == 2){
+                            carril.setFinMontacarga1(true);
+                            if(carril.getFinMontacarga2()){
+                                carril.setFinAuxiliar(true);
+                                carril.setHoraFin(LocalTime.now());
+                            }
+                        }
+                    } else {
+                        if(carril.getCantidadMontacargas() == 1){
+                            carril.setFinMontacarga1(false);
+                            carril.setFinAuxiliar(false);
+                            carril.setHoraFin(null);
+                        } else if(carril.getCantidadMontacargas() == 2){
+                            carril.setFinMontacarga1(false);
+                            carril.setFinAuxiliar(false);
+                            carril.setHoraFin(null);
+                        }
+                    }
+                } else if (montacarga == 2) {
+                    if (presente) {
+                        if(carril.getCantidadMontacargas() == 1){
+                            carril.setFinMontacarga1(true);
+                            carril.setFinAuxiliar(true);
+                            carril.setHoraFin(LocalTime.now());
+                        } else if(carril.getCantidadMontacargas() == 2){
+                            carril.setFinMontacarga2(true);
+                            if(carril.getFinMontacarga1()){
+                                carril.setFinAuxiliar(true);
+                                carril.setHoraFin(LocalTime.now());
+                            }
+                        }
+                    } else {
+                        if(carril.getCantidadMontacargas() == 1){
+                            carril.setFinMontacarga1(false);
+                            carril.setFinAuxiliar(false);
+                            carril.setHoraFin(null);
+                        } else if(carril.getCantidadMontacargas() == 2){
+                            carril.setFinMontacarga2(false);
+                            carril.setFinAuxiliar(false);
+                            carril.setHoraFin(null);
+                        }
+                    }
+                }
+
+
+                return carrilesRepository.save(carril);
+            }
         }
         return null;
     }
