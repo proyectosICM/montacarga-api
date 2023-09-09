@@ -150,10 +150,6 @@ public class CarrilesService {
                             carril.setHoraFin(LocalTime.now());
                         } else if(carril.getCantidadMontacargas() == 2){
                             carril.setFinMontacarga1(true);
-                            if(carril.getFinMontacarga2()){
-                                carril.setFinAuxiliar(true);
-                                carril.setHoraFin(LocalTime.now());
-                            }
                         }
                     } else {
                         if(carril.getCantidadMontacargas() == 1){
@@ -174,10 +170,6 @@ public class CarrilesService {
                             carril.setHoraFin(LocalTime.now());
                         } else if(carril.getCantidadMontacargas() == 2){
                             carril.setFinMontacarga2(true);
-                            if(carril.getFinMontacarga1()){
-                                carril.setFinAuxiliar(true);
-                                carril.setHoraFin(LocalTime.now());
-                            }
                         }
                     } else {
                         if(carril.getCantidadMontacargas() == 1){
