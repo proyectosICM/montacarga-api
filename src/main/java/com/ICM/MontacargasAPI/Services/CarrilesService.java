@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,13 +46,25 @@ public class CarrilesService {
         return null;
     }
 
-    public CarrilesModel AsingMont(Long id, CarrilesModel carrilesModel){
+    public CarrilesModel AsingMont(Long id, CarrilesModel carrilesModel) {
         Optional<CarrilesModel> existing = carrilesRepository.findById(id);
-        if(existing.isPresent()){
+        if (existing.isPresent()) {
             CarrilesModel carril = existing.get();
             carril.setCantidadMontacargas(carrilesModel.getCantidadMontacargas());
             carril.setEstadosModel(carrilesModel.getEstadosModel());
-            carril.setHoraInicio(LocalTime.now());
+
+            // Configura la zona horaria de Perú
+            ZoneId peruZone = ZoneId.of("America/Lima");
+
+            // Obtiene la hora actual en la zona horaria de Perú
+            ZonedDateTime horaInicioPeru = ZonedDateTime.now(peruZone);
+
+            // Extrae la hora local de Perú
+            LocalTime horaLocalPeru = horaInicioPeru.toLocalTime();
+
+            // Asigna la hora local de Perú al carril
+            carril.setHoraInicio(horaLocalPeru);
+
             return carrilesRepository.save(carril);
         }
         return null;
