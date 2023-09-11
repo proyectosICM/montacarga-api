@@ -160,25 +160,32 @@ public class CarrilesService {
     // Fin montacargas
     public CarrilesModel FinMontacargas(Long id, int montacarga, boolean presente) {
         Optional<CarrilesModel> existing = carrilesRepository.findById(id);
+
+        // Configura la zona horaria de Perú
+        ZoneId peruZone = ZoneId.of("America/Lima");
+
+        // Obtiene la hora actual en la zona horaria de Perú
+        LocalTime horaActualPeru = LocalTime.now(peruZone);
+
         if (existing.isPresent()) {
             CarrilesModel carril = existing.get();
             if (carril.getEstadosModel().getId() == 3) {
-                switch (montacarga){
+                switch (montacarga) {
                     case 1:
                         if (presente) {
-                            if(carril.getCantidadMontacargas() == 1){
+                            if (carril.getCantidadMontacargas() == 1) {
                                 carril.setFinMontacarga1(true);
                                 carril.setFinAuxiliar(true);
-                                carril.setHoraFin(LocalTime.now());
-                            } else if(carril.getCantidadMontacargas() == 2){
+                                carril.setHoraFin(horaActualPeru);
+                            } else if (carril.getCantidadMontacargas() == 2) {
                                 carril.setFinMontacarga1(true);
                             }
                         } else {
-                            if(carril.getCantidadMontacargas() == 1){
+                            if (carril.getCantidadMontacargas() == 1) {
                                 carril.setFinMontacarga1(false);
                                 carril.setFinAuxiliar(false);
                                 carril.setHoraFin(null);
-                            } else if(carril.getCantidadMontacargas() == 2){
+                            } else if (carril.getCantidadMontacargas() == 2) {
                                 carril.setFinMontacarga1(false);
                                 carril.setFinAuxiliar(false);
                                 carril.setHoraFin(null);
@@ -188,19 +195,19 @@ public class CarrilesService {
 
                     case 2:
                         if (presente) {
-                            if(carril.getCantidadMontacargas() == 1){
+                            if (carril.getCantidadMontacargas() == 1) {
                                 carril.setFinMontacarga1(true);
                                 carril.setFinAuxiliar(true);
-                                carril.setHoraFin(LocalTime.now());
-                            } else if(carril.getCantidadMontacargas() == 2){
+                                carril.setHoraFin(horaActualPeru);
+                            } else if (carril.getCantidadMontacargas() == 2) {
                                 carril.setFinMontacarga2(true);
                             }
                         } else {
-                            if(carril.getCantidadMontacargas() == 1){
+                            if (carril.getCantidadMontacargas() == 1) {
                                 carril.setFinMontacarga1(false);
                                 carril.setFinAuxiliar(false);
                                 carril.setHoraFin(null);
-                            } else if(carril.getCantidadMontacargas() == 2){
+                            } else if (carril.getCantidadMontacargas() == 2) {
                                 carril.setFinMontacarga2(false);
                                 carril.setFinAuxiliar(false);
                                 carril.setHoraFin(null);
@@ -209,13 +216,11 @@ public class CarrilesService {
                         break;
                 }
 
-
                 return carrilesRepository.save(carril);
             }
         }
         return null;
     }
-
     public CarrilesModel UnirseMontacargas(Long id, String placa) {
         Optional<CarrilesModel> existing = carrilesRepository.findById(id);
         return existing.map(carril -> {
