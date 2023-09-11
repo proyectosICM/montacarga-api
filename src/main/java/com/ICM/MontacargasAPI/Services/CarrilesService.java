@@ -70,12 +70,19 @@ public class CarrilesService {
         return null;
     }
 
-    public CarrilesModel FinAuxiliar(Long id, CarrilesModel carrilesModel){
+    public CarrilesModel FinAuxiliar(Long id, CarrilesModel carrilesModel) {
         Optional<CarrilesModel> existing = carrilesRepository.findById(id);
-        if (existing.isPresent()){
+        if (existing.isPresent()) {
             CarrilesModel carril = existing.get();
             carril.setFinAuxiliar(carrilesModel.getFinAuxiliar());
-            carril.setHoraFin(LocalTime.now());
+
+            // Configurar la zona horaria de Perú (PET - Peru Time)
+            ZoneId zonaHorariaPeru = ZoneId.of("America/Lima");
+
+            // Obtener la hora actual en la zona horaria de Perú
+            LocalTime horaActualPeru = LocalTime.now(zonaHorariaPeru);
+
+            carril.setHoraFin(horaActualPeru);
             carril.setTrabaruedas(false);
             return carrilesRepository.save(carril);
         }
