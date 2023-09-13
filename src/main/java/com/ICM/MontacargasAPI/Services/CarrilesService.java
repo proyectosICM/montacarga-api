@@ -128,7 +128,7 @@ public class CarrilesService {
                 // Estado 2 -> Estado 1: Restablecer valores
                 carril.setEstadosModel(nuevoEstado);
                 resetearValores(carril);
-            } else if (carril.getEstadosModel().getId() == 3 && carril.getFinAuxiliar() && carril.getSalida() && nuevoEstadoId == 1) {
+            } else if (carril.getEstadosModel().getId() == 3 && carril.getSalida() && nuevoEstadoId == 1) {
                 // Estado 3 -> Estado 1: Restablecer valores
                 carril.setEstadosModel(nuevoEstado);
                 resetearValores(carril);
