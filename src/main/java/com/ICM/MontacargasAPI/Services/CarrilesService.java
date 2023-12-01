@@ -267,5 +267,11 @@ public class CarrilesService {
         }).orElse(null);
     }
 
+    public CarrilesModel Save(CarrilesModel carrilesModel){
+        return carrilesRepository.save(carrilesModel);
+    }
 
+    public void Delete(Long id){
+        carrilesRepository.deleteById(id);
+    }
 }

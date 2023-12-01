@@ -31,6 +31,18 @@ public class CarrilesController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PostMapping
+    public ResponseEntity<CarrilesModel> Create(@RequestBody CarrilesModel carrilesModel){
+        CarrilesModel carril = carrilesService.Save(carrilesModel);
+        return new ResponseEntity<>(carril, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CarrilesModel> Delete(@PathVariable Long id){
+        carrilesService.Delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<CarrilesModel> Editar(@PathVariable  Long id, @RequestBody CarrilesModel carrilesModel){
         CarrilesModel asignMont = carrilesService.Editar(id, carrilesModel);
