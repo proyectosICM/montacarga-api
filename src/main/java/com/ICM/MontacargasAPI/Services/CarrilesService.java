@@ -6,7 +6,6 @@ import com.ICM.MontacargasAPI.Repositories.CarrilesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -18,35 +17,43 @@ public class CarrilesService {
     @Autowired
     CarrilesRepository carrilesRepository;
 
-    public List<CarrilesModel> GetAll(){
+    public List<CarrilesModel> getAllLanes(){
         return carrilesRepository.findAll();
     }
 
-    public Optional<CarrilesModel> GetById(Long id){
+    public Optional<CarrilesModel> getLaneById(Long id){
         return carrilesRepository.findById(id);
     }
 
-    public CarrilesModel Editar(Long id, CarrilesModel carrilesModel){
+    public CarrilesModel saveLane(CarrilesModel carrilesModel){
+        return carrilesRepository.save(carrilesModel);
+    }
+
+
+    public CarrilesModel editLane(Long id, CarrilesModel carrilesModel){
         Optional<CarrilesModel> existing = carrilesRepository.findById(id);
         if(existing.isPresent()){
             CarrilesModel carril = existing.get();
-            carril.setNombre(carril.getNombre());
-            carril.setEstadosModel(carril.getEstadosModel());
-            carril.setCantidadMontacargas(carril.getCantidadMontacargas());
-            carril.setFinMontacarga1(carril.getFinMontacarga1());
-            carril.setFinMontacarga2(carril.getFinMontacarga2());
-            carril.setFinAuxiliar(carril.getFinAuxiliar());
-            carril.setSalida(carril.getSalida());
-            carril.setHoraInicio(carril.getHoraInicio());
-            carril.setHoraFin(carril.getHoraFin());
-            carril.setNotificar(carrilesModel.getNotificar());
+            carril.setNombre(carrilesModel.getNombre());
+            carril.setEstadosModel(carrilesModel.getEstadosModel());
+            carril.setCantidadMontacargas(carrilesModel.getCantidadMontacargas());
+            carril.setFinMontacarga1(carrilesModel.getFinMontacarga1());
+            carril.setFinMontacarga2(carrilesModel.getFinMontacarga2());
+            carril.setFinAuxiliar(carrilesModel.getFinAuxiliar());
+            carril.setSalida(carrilesModel.getSalida());
+            carril.setHoraInicio(carrilesModel.getHoraInicio());
+            carril.setHoraFin(carrilesModel.getHoraFin());
             carril.setTrabaruedas(carrilesModel.getTrabaruedas());
             return carrilesRepository.save(carril);
         }
         return null;
     }
 
-    public CarrilesModel AsingMont(Long id, CarrilesModel carrilesModel) {
+    public void deleteLaneById(Long id){
+        carrilesRepository.deleteById(id);
+    }
+
+    public CarrilesModel startLoading (Long id, CarrilesModel carrilesModel) {
         Optional<CarrilesModel> existing = carrilesRepository.findById(id);
         if (existing.isPresent()) {
             CarrilesModel carril = existing.get();
@@ -54,7 +61,7 @@ public class CarrilesService {
             carril.setEstadosModel(carrilesModel.getEstadosModel());
 
             // Configura la zona horaria de Perú
-            ZoneId peruZone = ZoneId.of("America/Lima");
+            ZoneId peruZone = ZoneId.of("America/Lim    a");
 
             // Obtiene la hora actual en la zona horaria de Perú
             ZonedDateTime horaInicioPeru = ZonedDateTime.now(peruZone);
@@ -70,7 +77,7 @@ public class CarrilesService {
         return null;
     }
 
-    public CarrilesModel FinAuxiliar(Long id, CarrilesModel carrilesModel) {
+    public CarrilesModel endLoading(Long id, CarrilesModel carrilesModel) {
         Optional<CarrilesModel> existing = carrilesRepository.findById(id);
         if (existing.isPresent()) {
             CarrilesModel carril = existing.get();
@@ -89,19 +96,7 @@ public class CarrilesService {
         return null;
     }
 
-    public CarrilesModel NotificarIng(Long id){
-        Optional<CarrilesModel> existing = carrilesRepository.findById(id);
-        if (existing.isPresent()){
-            CarrilesModel carril = existing.get();
-            if (!carril.getNotificar() && carril.getEstadosModel().getId() == 2){
-                carril.setNotificar(true);
-                return carrilesRepository.save(carril);
-            }
-        }
-        return null;
-    }
-
-    public CarrilesModel SalidaConductor(Long id, CarrilesModel carrilesModel){
+    public CarrilesModel driverDeparture(Long id, CarrilesModel carrilesModel){
         Optional<CarrilesModel> existing = carrilesRepository.findById(id);
         if (existing.isPresent()){
             CarrilesModel carril = existing.get();
@@ -111,9 +106,8 @@ public class CarrilesService {
         return null;
     }
 
-    // Servicios los sensores
-    //Cambiar estado
-    public CarrilesModel CambiarEstado(Long id, Long nuevoEstadoId) {
+
+    public CarrilesModel changeStatus(Long id, Long nuevoEstadoId) {
         Optional<CarrilesModel> existing = carrilesRepository.findById(id);
         if (existing.isPresent()) {
             CarrilesModel carril = existing.get();
@@ -123,7 +117,6 @@ public class CarrilesService {
             if (carril.getEstadosModel().getId() == 1) {
                 carril.setEstadosModel(nuevoEstado);
                 carril.setMontacargasSolicitados(2);
-                carril.setNotificar(false);
             } else if (carril.getEstadosModel().getId() == 2 && nuevoEstadoId == 1) {
                 // Estado 2 -> Estado 1: Restablecer valores
                 carril.setEstadosModel(nuevoEstado);
@@ -153,12 +146,11 @@ public class CarrilesService {
         carril.setFinAuxiliar(null);
         carril.setHoraInicio(null);
         carril.setHoraFin(null);
-        carril.setNotificar(null);
         carril.setTrabaruedas(null);
     }
 
     // Fin montacargas
-    public CarrilesModel FinMontacargas(Long id, int montacarga, boolean presente) {
+    public CarrilesModel endForklift(Long id, int montacarga, boolean presente) {
         Optional<CarrilesModel> existing = carrilesRepository.findById(id);
 
         // Configura la zona horaria de Perú
@@ -221,7 +213,8 @@ public class CarrilesService {
         }
         return null;
     }
-    public CarrilesModel UnirseMontacargas(Long id, String placa) {
+
+    public CarrilesModel joinForklift(Long id, String placa) {
         Optional<CarrilesModel> existing = carrilesRepository.findById(id);
         return existing.map(carril -> {
             if (carril.getEstadosModel().getId() == 2) {
@@ -239,7 +232,7 @@ public class CarrilesService {
         }).orElse(null);
     }
 
-    public CarrilesModel DesUnirseMontacargas(Long id, String placa) {
+    public CarrilesModel leaveForklift(Long id, String placa) {
         Optional<CarrilesModel> existing = carrilesRepository.findById(id);
         return existing.map(carril -> {
             if (carril.getEstadosModel().getId() == 2) {
@@ -267,11 +260,6 @@ public class CarrilesService {
         }).orElse(null);
     }
 
-    public CarrilesModel Save(CarrilesModel carrilesModel){
-        return carrilesRepository.save(carrilesModel);
-    }
 
-    public void Delete(Long id){
-        carrilesRepository.deleteById(id);
-    }
+
 }

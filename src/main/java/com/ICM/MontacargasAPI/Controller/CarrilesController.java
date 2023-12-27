@@ -18,13 +18,13 @@ public class CarrilesController {
     CarrilesService carrilesService;
 
     @GetMapping
-    public List<CarrilesModel> GetAll(){
-        return carrilesService.GetAll();
+    public List<CarrilesModel> getAllLanes(){
+        return carrilesService.getAllLanes();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CarrilesModel> GetById(@PathVariable Long id){
-        Optional<CarrilesModel> carril = carrilesService.GetById(id);
+    public ResponseEntity<CarrilesModel> getLaneById(@PathVariable Long id){
+        Optional<CarrilesModel> carril = carrilesService.getLaneById(id);
         if (carril.isPresent()){
             return new ResponseEntity<>(carril.get(), HttpStatus.OK);
         }
@@ -32,29 +32,29 @@ public class CarrilesController {
     }
 
     @PostMapping
-    public ResponseEntity<CarrilesModel> Create(@RequestBody CarrilesModel carrilesModel){
-        CarrilesModel carril = carrilesService.Save(carrilesModel);
+    public ResponseEntity<CarrilesModel> saveLane(@RequestBody CarrilesModel carrilesModel){
+        CarrilesModel carril = carrilesService.saveLane(carrilesModel);
         return new ResponseEntity<>(carril, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<CarrilesModel> Delete(@PathVariable Long id){
-        carrilesService.Delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
     @PutMapping("/{id}")
-    public ResponseEntity<CarrilesModel> Editar(@PathVariable  Long id, @RequestBody CarrilesModel carrilesModel){
-        CarrilesModel asignMont = carrilesService.Editar(id, carrilesModel);
+    public ResponseEntity<CarrilesModel> editLane(@PathVariable  Long id, @RequestBody CarrilesModel carrilesModel){
+        CarrilesModel asignMont = carrilesService.editLane(id, carrilesModel);
         if(asignMont!=null){
             return new ResponseEntity<>(asignMont, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CarrilesModel> deleteLaneById(@PathVariable Long id){
+        carrilesService.deleteLaneById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     @PutMapping("/asignarMontacargas/{id}")
-    public ResponseEntity<CarrilesModel> AsignMont(@PathVariable  Long id, @RequestBody CarrilesModel carrilesModel){
-        CarrilesModel asignMont = carrilesService.AsingMont(id, carrilesModel);
+    public ResponseEntity<CarrilesModel> startLoading(@PathVariable  Long id, @RequestBody CarrilesModel carrilesModel){
+        CarrilesModel asignMont = carrilesService.startLoading(id, carrilesModel);
         if(asignMont!=null){
             return new ResponseEntity<>(asignMont, HttpStatus.OK);
         }
@@ -63,48 +63,27 @@ public class CarrilesController {
 
     //EndPoint para marcar el fin de carga por el auxiliar
     @PutMapping("/finAuxiliar/{id}")
-    public ResponseEntity<CarrilesModel> FinAuxiliar(@PathVariable Long id, @RequestBody CarrilesModel carrilesModel){
-        CarrilesModel finAuxiliar = carrilesService.FinAuxiliar(id, carrilesModel);
+    public ResponseEntity<CarrilesModel> endLoading(@PathVariable Long id, @RequestBody CarrilesModel carrilesModel){
+        CarrilesModel finAuxiliar = carrilesService.endLoading(id, carrilesModel);
         if (finAuxiliar!=null){
             return new ResponseEntity<>(finAuxiliar, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/notificarIng/{id}")
-    public ResponseEntity<CarrilesModel> NotificarIng(@PathVariable Long id){
-        CarrilesModel finAuxiliar = carrilesService.NotificarIng(id);
-        if (finAuxiliar!=null){
-            return new ResponseEntity<>(finAuxiliar, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
 
     @PutMapping("/salidaConductor/{id}")
-    public ResponseEntity<CarrilesModel> SalidaConductor(@PathVariable Long id, @RequestBody CarrilesModel carrilesModel){
-        CarrilesModel salidaConductor = carrilesService.SalidaConductor(id, carrilesModel);
+    public ResponseEntity<CarrilesModel> driverDeparture(@PathVariable Long id, @RequestBody CarrilesModel carrilesModel){
+        CarrilesModel salidaConductor = carrilesService.driverDeparture(id, carrilesModel);
         if (salidaConductor!=null){
             return new ResponseEntity<>(salidaConductor, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-/*
-    @PutMapping("/CambiarEstado/{id}")
-    public ResponseEntity<CarrilesModel> CambiarEstado(@PathVariable Long id, @RequestBody CarrilesModel carrilesModel){
-        CarrilesModel cambiarEstado = carrilesService.CambiarEstado(id, carrilesModel);
-        if(cambiarEstado)
-    }
-*/
 
-    @GetMapping("/hola")
-    public String sal() {
-        return "Hola p";
-    }
-
-    //Controladores pàra los sensiores
     @PutMapping("/cambiarEstado/{id}/{estado}")
-    public ResponseEntity<CarrilesModel> CambiarEstado(@PathVariable Long id, @PathVariable Long estado){
-        CarrilesModel cambiarEstado = carrilesService.CambiarEstado(id, estado);
+    public ResponseEntity<CarrilesModel> changeStatus(@PathVariable Long id, @PathVariable Long estado){
+        CarrilesModel cambiarEstado = carrilesService.changeStatus(id, estado);
         if (cambiarEstado!=null){
             return new ResponseEntity<>(cambiarEstado, HttpStatus.OK);
         }
@@ -112,8 +91,8 @@ public class CarrilesController {
     }
 
     @PutMapping("/finMontacarga/{id}/{montacarga}/{presente}")
-    public ResponseEntity<CarrilesModel> FinMontacarga(@PathVariable Long id, @PathVariable int montacarga, @PathVariable boolean presente){
-        CarrilesModel finMontacarga = carrilesService.FinMontacargas(id, montacarga, presente);
+    public ResponseEntity<CarrilesModel> endForklift(@PathVariable Long id, @PathVariable int montacarga, @PathVariable boolean presente){
+        CarrilesModel finMontacarga = carrilesService.endForklift(id, montacarga, presente);
         if (finMontacarga!=null){
             return new ResponseEntity<>(finMontacarga, HttpStatus.OK);
         }
@@ -121,8 +100,8 @@ public class CarrilesController {
     }
 
     @PutMapping("/unirse/{id}/{placa}")
-    public ResponseEntity<CarrilesModel> Unirse(@PathVariable Long id, @PathVariable String placa){
-        CarrilesModel finMontacarga = carrilesService.UnirseMontacargas(id, placa);
+    public ResponseEntity<CarrilesModel> joinForklift(@PathVariable Long id, @PathVariable String placa){
+        CarrilesModel finMontacarga = carrilesService.joinForklift(id, placa);
         if (finMontacarga!=null){
             return new ResponseEntity<>(finMontacarga, HttpStatus.OK);
         }
@@ -130,8 +109,8 @@ public class CarrilesController {
     }
 
     @PutMapping("/desunirse/{id}/{placa}")
-    public ResponseEntity<CarrilesModel> DesUnirse(@PathVariable Long id, @PathVariable String placa){
-        CarrilesModel finMontacarga = carrilesService.DesUnirseMontacargas(id, placa);
+    public ResponseEntity<CarrilesModel> leaveForklift(@PathVariable Long id, @PathVariable String placa){
+        CarrilesModel finMontacarga = carrilesService.leaveForklift(id, placa);
         if (finMontacarga!=null){
             return new ResponseEntity<>(finMontacarga, HttpStatus.OK);
         }
