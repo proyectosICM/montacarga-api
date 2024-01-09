@@ -114,7 +114,11 @@ public class CarrilesService {
             EstadosModel nuevoEstado = new EstadosModel();
             nuevoEstado.setId(nuevoEstadoId);
 
-            if (carril.getEstadosModel().getId() == 1) {
+            if (carril.getEstadosModel().getId() == 1 && nuevoEstado.getId() == 2) {
+                // When actual state is 1 (Libre) and "nuevoEstado" is 2 run this condition
+                /*
+                * When actual state is 1 (Libre) and "nuevoEstado" is 2 run this condition
+                * */
                 carril.setEstadosModel(nuevoEstado);
                 carril.setMontacargasSolicitados(2);
             } else if (carril.getEstadosModel().getId() == 2 && nuevoEstadoId == 1) {
@@ -128,6 +132,12 @@ public class CarrilesService {
             } else if (carril.getEstadosModel().getId() == 2 && nuevoEstadoId == 2) {
                 // Estado 2 -> Estado 1: Restablecer valores
                 carril.setEstadosModel(nuevoEstado);
+            } else if (nuevoEstadoId == 404) {
+                // Estado 2 -> Estado 1: Restablecer valores
+                resetearValores(carril);
+                EstadosModel nuevoEstado2 = new EstadosModel();
+                nuevoEstado2.setId(1L);
+                carril.setEstadosModel(nuevoEstado2);
             }
 
             return carrilesRepository.save(carril);
