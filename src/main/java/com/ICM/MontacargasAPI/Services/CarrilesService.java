@@ -61,7 +61,7 @@ public class CarrilesService {
             carril.setEstadosModel(carrilesModel.getEstadosModel());
 
             // Configura la zona horaria de Perú
-            ZoneId peruZone = ZoneId.of("America/Lim    a");
+            ZoneId peruZone = ZoneId.of("America/Lima");
 
             // Obtiene la hora actual en la zona horaria de Perú
             ZonedDateTime horaInicioPeru = ZonedDateTime.now(peruZone);
