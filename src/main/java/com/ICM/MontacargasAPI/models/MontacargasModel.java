@@ -1,4 +1,4 @@
-package com.ICM.MontacargasAPI.Models;
+package com.ICM.MontacargasAPI.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "estados")
-public class EstadosModel {
+@Table(name = "montacargas")
+public class MontacargasModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
     private Long id;
-
-    private String nombre;
 }

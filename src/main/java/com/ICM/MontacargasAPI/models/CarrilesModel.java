@@ -1,11 +1,10 @@
-package com.ICM.MontacargasAPI.Models;
+package com.ICM.MontacargasAPI.models;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 import java.time.LocalTime;
 

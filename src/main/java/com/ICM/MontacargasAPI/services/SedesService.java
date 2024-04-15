@@ -1,8 +1,7 @@
-package com.ICM.MontacargasAPI.Services;
+package com.ICM.MontacargasAPI.services;
 
-import com.ICM.MontacargasAPI.Models.EstadosModel;
-import com.ICM.MontacargasAPI.Models.SedesModel;
-import com.ICM.MontacargasAPI.Repositories.SedesRepository;
+import com.ICM.MontacargasAPI.models.SedesModel;
+import com.ICM.MontacargasAPI.repositories.SedesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

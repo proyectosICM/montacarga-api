@@ -1,6 +1,6 @@
-package com.ICM.MontacargasAPI.Repositories;
+package com.ICM.MontacargasAPI.repositories;
 
-import com.ICM.MontacargasAPI.Models.CarrilesModel;
+import com.ICM.MontacargasAPI.models.CarrilesModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 /**

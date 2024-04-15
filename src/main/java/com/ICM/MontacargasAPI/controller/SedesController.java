@@ -1,7 +1,7 @@
-package com.ICM.MontacargasAPI.Controller;
+package com.ICM.MontacargasAPI.controller;
 
-import com.ICM.MontacargasAPI.Models.SedesModel;
-import com.ICM.MontacargasAPI.Services.SedesService;
+import com.ICM.MontacargasAPI.models.SedesModel;
+import com.ICM.MontacargasAPI.services.SedesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
