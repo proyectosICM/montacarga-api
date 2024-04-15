@@ -23,7 +23,26 @@ import java.util.Optional;
 @RequestMapping("api/carriles")
 public class CarrilesController {
     @Autowired
-    CarrilesService carrilesService;
+    private CarrilesService carrilesService;
+    @PutMapping("/trabaruedas/{id}/{trabaruedas}")
+    public ResponseEntity<CarrilesModel> trabaruedas(@PathVariable Long id, @PathVariable Boolean trabaruedas){
+        CarrilesModel colocacionTrabaruedas = carrilesService.trabaruedasColocacion(id, trabaruedas);
+        if (colocacionTrabaruedas!=null){
+            return new ResponseEntity<>(colocacionTrabaruedas, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping("/cambiarEstado/{id}/{estado}")
+    public ResponseEntity<CarrilesModel> changeStatus(@PathVariable Long id, @PathVariable Long estado){
+        CarrilesModel cambiarEstado = carrilesService.changeStatus(id, estado);
+        if (cambiarEstado!=null){
+            return new ResponseEntity<>(cambiarEstado, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+
 
     @GetMapping
     public List<CarrilesModel> getAllLanes(){
@@ -74,7 +93,7 @@ public class CarrilesController {
     public ResponseEntity<CarrilesModel> endLoading(@PathVariable Long id, @RequestBody CarrilesModel carrilesModel){
         CarrilesModel finAuxiliar = carrilesService.endLoading(id, carrilesModel);
         if (finAuxiliar!=null){
-            return new ResponseEntity<>(finAuxiliar, HttpStatus.OK);
+             return new ResponseEntity<>(finAuxiliar, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -89,24 +108,15 @@ public class CarrilesController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/cambiarEstado/{id}/{estado}")
-    public ResponseEntity<CarrilesModel> changeStatus(@PathVariable Long id, @PathVariable Long estado){
-        CarrilesModel cambiarEstado = carrilesService.changeStatus(id, estado);
-        if (cambiarEstado!=null){
-            return new ResponseEntity<>(cambiarEstado, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
     @PutMapping("/finMontacarga/{id}/{montacarga}/{presente}")
     public ResponseEntity<CarrilesModel> endForklift(@PathVariable Long id, @PathVariable int montacarga, @PathVariable boolean presente){
-        CarrilesModel finMontacarga = carrilesService.endForklift(id, montacarga, presente);
+        CarrilesModel finMontacarga = carrilesService.finMontacargas(id, montacarga, presente);
         if (finMontacarga!=null){
             return new ResponseEntity<>(finMontacarga, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
+/*
     @PutMapping("/unirse/{id}/{placa}")
     public ResponseEntity<CarrilesModel> joinForklift(@PathVariable Long id, @PathVariable String placa){
         CarrilesModel finMontacarga = carrilesService.joinForklift(id, placa);
@@ -125,6 +135,6 @@ public class CarrilesController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-
+*/
 
 }
